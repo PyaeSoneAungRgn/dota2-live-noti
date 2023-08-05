@@ -2,7 +2,7 @@
 
 # Dota2 Live Noti
 
-Seamless Access to Upcoming Dota 2 Fixtures, Right from Your Desktop Menubar!
+Seamless Access to Upcoming Dota2 Fixtures, Right from Your Desktop Menubar!
 
 ## Installation
 
