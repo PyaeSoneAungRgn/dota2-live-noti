@@ -12,6 +12,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Str;
 use Symfony\Component\BrowserKit\HttpBrowser;
+use Throwable;
 
 class SyncFixture implements ShouldQueue
 {
@@ -34,8 +35,20 @@ class SyncFixture implements ShouldQueue
     public function handle(): void
     {
         $fixtures = [];
-        $machineTimezone = Process::run('date +%Z');
-        $machineTimezone = Str::replace(["\r", "\n"], ['', ''], $machineTimezone->output());
+        $machineTimezone = 'UTC';
+
+        try {
+            if(PHP_OS_FAMILY == 'Windows') {
+                $machineTimezoneHour = Process::run('powershell -command "(Get-TimeZone).BaseUtcOffset.Hours')->output();
+                $machineTimezoneMinute = Process::run('powershell -command "(Get-TimeZone).BaseUtcOffset.Minutes')->output();
+                $machineTimezone = '+' . Str::replace(["\r", "\n"], ['', ''], $machineTimezoneHour) . Str::replace(["\r", "\n"], ['', ''], $machineTimezoneMinute);
+            } else {
+                $machineTimezone = Process::run('date +%Z');
+                $machineTimezone = Str::replace(["\r", "\n"], ['', ''], $machineTimezone->output());
+            }
+        } catch (Throwable $e) {
+            report($e);
+        }
 
         $client = new HttpBrowser();
         $dom = $client->request('GET', 'https://liquipedia.net/dota2/Liquipedia:Upcoming_and_ongoing_matches');
