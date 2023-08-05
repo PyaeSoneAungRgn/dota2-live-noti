@@ -39,8 +39,8 @@ class SyncFixture implements ShouldQueue
 
         try {
             if(PHP_OS_FAMILY == 'Windows') {
-                $machineTimezoneHour = Process::run('powershell -command "(Get-TimeZone).BaseUtcOffset.Hours')->output();
-                $machineTimezoneMinute = Process::run('powershell -command "(Get-TimeZone).BaseUtcOffset.Minutes')->output();
+                $machineTimezoneHour = Process::run('powershell -command "(Get-TimeZone).BaseUtcOffset.Hours"')->output();
+                $machineTimezoneMinute = Process::run('powershell -command "(Get-TimeZone).BaseUtcOffset.Minutes"')->output();
                 $machineTimezone = '+' . Str::replace(["\r", "\n"], ['', ''], $machineTimezoneHour) . Str::replace(["\r", "\n"], ['', ''], $machineTimezoneMinute);
             } else {
                 $machineTimezone = Process::run('date +%Z');
