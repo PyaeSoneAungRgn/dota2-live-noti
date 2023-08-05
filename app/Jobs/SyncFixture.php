@@ -84,14 +84,10 @@ class SyncFixture implements ShouldQueue
 
         if(count($fixtures) > 0) {
             Fixture::truncate();
-            Fixture::query()
-                    ->create(array_merge($fixtures[0], [
-                        'home_team_name' => rand(10000000, 99999999)
-                    ]));
-            // foreach($fixtures as $fixture) {
-            //     Fixture::query()
-            //         ->create($fixture);
-            // }
+            foreach($fixtures as $fixture) {
+                Fixture::query()
+                    ->create($fixture);
+            }
         }
     }
 }
