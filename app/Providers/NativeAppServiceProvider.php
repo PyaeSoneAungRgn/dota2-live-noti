@@ -3,12 +3,7 @@
 namespace App\Providers;
 
 use App\Jobs\SyncFixture;
-use Native\Laravel\Facades\ContextMenu;
-use Native\Laravel\Facades\Dock;
-use Native\Laravel\Facades\Window;
-use Native\Laravel\Facades\GlobalShortcut;
 use Native\Laravel\Facades\MenuBar;
-use Native\Laravel\Menu\Menu;
 
 class NativeAppServiceProvider
 {

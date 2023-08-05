@@ -23,6 +23,6 @@ class Fixture extends Model
     ];
 
     protected $casts = [
-        'start_at' => 'datetime'
+        'start_at' => 'datetime',
     ];
 }

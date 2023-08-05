@@ -8,7 +8,7 @@ class ImageProxyController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $url = 'https://liquipedia.net/' . $request->input('image');
+        $url = 'https://liquipedia.net/'.$request->input('image');
 
         $fileContents = file_get_contents($url);
 
@@ -18,7 +18,7 @@ class ImageProxyController extends Controller
 
         return response()->make($fileContents, 200, [
             'Content-Type' => $contentType,
-            'Content-Disposition' => 'inline; filename="' . $fileName . '"',
+            'Content-Disposition' => 'inline; filename="'.$fileName.'"',
         ]);
     }
 }

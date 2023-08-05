@@ -4,15 +4,14 @@ namespace App\Jobs;
 
 use App\Models\Fixture;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Symfony\Component\BrowserKit\HttpBrowser;
-use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Str;
+use Symfony\Component\BrowserKit\HttpBrowser;
 
 class SyncFixture implements ShouldQueue
 {
@@ -41,29 +40,29 @@ class SyncFixture implements ShouldQueue
         $client = new HttpBrowser();
         $dom = $client->request('GET', 'https://liquipedia.net/dota2/Liquipedia:Upcoming_and_ongoing_matches');
         $tables = $dom->filter('table.infobox_matches_content');
-        foreach((range(0, $tables->count())) as $index) {
+        foreach ((range(0, $tables->count())) as $index) {
             $fixture = [];
             $continue = true;
 
             $table = $tables->eq($index);
 
-            if($table->filter('.team-left > span > span')->eq(1)->filter('a')->count() == 0) {
+            if ($table->filter('.team-left > span > span')->eq(1)->filter('a')->count() == 0) {
                 $continue = false; // maybe TBD
             }
 
-            if($table->filter('.team-right > span > span')->eq(1)->filter('a')->count() == 0) {
+            if ($table->filter('.team-right > span > span')->eq(1)->filter('a')->count() == 0) {
                 $continue = false; // maybe TBD
             }
 
-            if($table->filter('.versus > div')->count() == 0) {
+            if ($table->filter('.versus > div')->count() == 0) {
                 $continue = false;
             }
 
-            if($continue) {
+            if ($continue) {
                 $fixture['home_team_name'] = $table->filter('.team-left')->text();
                 $fixture['home_team_logo'] = $table->filter('.team-left > span > span')->eq(1)->filter('img')->attr('src');
 
-                if($table->filter('.versus > div')->eq(0)->text() != 'vs') {
+                if ($table->filter('.versus > div')->eq(0)->text() != 'vs') {
                     $fixture['home_team_win'] = Str::before($table->filter('.versus > div')->eq(0)->text(), ':');
                     $fixture['away_team_win'] = Str::after($table->filter('.versus > div')->eq(0)->text(), ':');
                 }
@@ -82,9 +81,9 @@ class SyncFixture implements ShouldQueue
             }
         }
 
-        if(count($fixtures) > 0) {
+        if (count($fixtures) > 0) {
             Fixture::truncate();
-            foreach($fixtures as $fixture) {
+            foreach ($fixtures as $fixture) {
                 Fixture::query()
                     ->create($fixture);
             }
